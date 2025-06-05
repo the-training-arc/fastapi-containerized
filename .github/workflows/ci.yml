@@ -66,3 +66,19 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v5.2.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  #----------------------------------------------
+  #       Gitleaks
+  #----------------------------------------------
+  gitleaks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
