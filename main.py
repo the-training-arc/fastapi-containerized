@@ -5,8 +5,9 @@ from typing import Annotated, List
 from fastapi import Depends, FastAPI, HTTPException, Path, Query
 from sqlalchemy.orm import Session
 
-from auth import User, get_current_active_user
+from auth import User
 from auth import app as auth_app
+from auth import get_current_active_user
 from database import SessionLocal
 from models.constants import Message
 from models.item import Item, ItemDB, ItemOut

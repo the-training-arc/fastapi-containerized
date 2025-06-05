@@ -1,6 +1,6 @@
 name: Code CI
 
-on: 
+on:
   push:
     branches:
       - main
@@ -37,7 +37,7 @@ jobs:
       security-events: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python@master
         env:

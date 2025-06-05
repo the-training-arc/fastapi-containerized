@@ -10,7 +10,7 @@ phases:
   install:
     runtime-versions:
       docker: 20
-  
+
   pre_build:
     commands:
       # Login to Amazon ECR
@@ -26,7 +26,7 @@ phases:
       # Build Docker image
       - echo Building the Docker image...
       - docker build --platform linux/amd64 -t ${REPOSITORY_URI}:${IMAGE_TAG} -t ${REPOSITORY_URI}:${LATEST_TAG} .
-      
+
   post_build:
     commands:
       # Push Docker images to ECR
@@ -37,7 +37,7 @@ phases:
       # Create artifact with image details
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' ${REPOSITORY_URI}:${IMAGE_TAG} > imageDefinitions.json
-      
+
       # Create environment variables file for CodeDeploy
       - echo Creating environment variables file...
       - echo "ECR_REPOSITORY_URL=${REPOSITORY_URI}:${IMAGE_TAG}" > deployment.env

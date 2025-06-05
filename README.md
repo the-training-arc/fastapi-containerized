@@ -13,7 +13,7 @@
 
 ---
 
-### **0. Setting Up the Environment** 
+### **0. Setting Up the Environment**
 #### For the complete code:
 ``` bash
 git checkout 0-initialization
@@ -28,30 +28,30 @@ git checkout 0-initialization
 
 1. Fork the provided workshop repository on GitHub to your account.
 2. Clone the forked repository:
-    
+
     ```bash
     git clone https://github.com/{github_username}/fastapi-workshop
     ```
-    
+
 3. Change into the project directory:
-    
+
     ```bash
     cd fastapi-workshop
     ```
-    
+
 4. Create a Python virtual environment for the project:
-    
+
     ```bash
     python3.12 -m venv env
     source env/bin/activate
     ```
-    
+
 5. Install the required dependencies:
-    
+
     ```bash
     pip install -r requirements.txt
     ```
-    
+
 
 ---
 
@@ -79,11 +79,11 @@ async def read_root():
 #### **Running the Application:**
 
 - Start the server using the following command:
-    
+
     ```bash
     fastapi dev
     ```
-    
+
 - Access the application in your browser at `http://127.0.0.1:8000`.
 
 #### **Interactive Documentation:**
@@ -146,7 +146,7 @@ async def create_item(item: Item):
 - The `Item` model ensures all input data matches the defined structure.
 
 #### **Validation Example:**
-- Sending invalid data (e.g., an int for `description`) will result in an automatically generated validation error. 
+- Sending invalid data (e.g., an int for `description`) will result in an automatically generated validation error.
 	![[Pasted image 20241123100116.png]]
 	![[Pasted image 20241123100124.png]]
 
