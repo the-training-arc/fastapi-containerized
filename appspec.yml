@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/fastapi-app
+file_exists_behavior: OVERWRITE
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+  ApplicationStart:
+    - location: scripts/start_application.sh
+      timeout: 600
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_application.sh

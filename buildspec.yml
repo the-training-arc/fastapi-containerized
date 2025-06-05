@@ -1,0 +1,59 @@
+version: 0.2
+
+env:
+  variables:
+    DOCKER_BUILDKIT: "1"
+  parameter-store:
+    SEMANTIC_VERSION: "/app/version"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+  
+  pre_build:
+    commands:
+      # Login to Amazon ECR
+      - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      # Set image tags
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${SEMANTIC_VERSION}-${COMMIT_HASH}
+      - LATEST_TAG=latest
+      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}
+
+  build:
+    commands:
+      # Build Docker image
+      - echo Building the Docker image...
+      - docker build --platform linux/amd64 -t ${REPOSITORY_URI}:${IMAGE_TAG} -t ${REPOSITORY_URI}:${LATEST_TAG} .
+      
+  post_build:
+    commands:
+      # Push Docker images to ECR
+      - echo Pushing Docker images to ECR...
+      - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
+      - docker push ${REPOSITORY_URI}:${LATEST_TAG}
+
+      # Create artifact with image details
+      - echo Writing image definitions file...
+      - printf '{"ImageURI":"%s"}' ${REPOSITORY_URI}:${IMAGE_TAG} > imageDefinitions.json
+      
+      # Create environment variables file for CodeDeploy
+      - echo Creating environment variables file...
+      - echo "ECR_REPOSITORY_URL=${REPOSITORY_URI}:${IMAGE_TAG}" > deployment.env
+      - echo "ECR_REPOSITORY_LATEST=${REPOSITORY_URI}:${LATEST_TAG}" >> deployment.env
+      - echo "IMAGE_TAG=${IMAGE_TAG}" >> deployment.env
+      - echo "COMMIT_HASH=${COMMIT_HASH}" >> deployment.env
+      - echo "SEMANTIC_VERSION=${SEMANTIC_VERSION}" >> deployment.env
+      - echo "AWS_REGION=${AWS_DEFAULT_REGION}" >> deployment.env
+
+artifacts:
+  files:
+    - imageDefinitions.json
+    - deployment.env
+    - appspec.yml
+    - scripts/before_install.sh
+    - scripts/start_application.sh
+    - scripts/stop_application.sh
+
+  discard-paths: no
