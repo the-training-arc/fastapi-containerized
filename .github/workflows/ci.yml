@@ -1,6 +1,12 @@
 name: Code CI
 
-on: push
+on: 
+  push:
+    branches:
+      - main
+      - 'releases/**'
+  pull_request:
+      types: [opened, synchronize, reopened]
 
 jobs:
   #----------------------------------------------
@@ -42,3 +48,21 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
+
+  #----------------------------------------------
+  #       SonarQube
+  #----------------------------------------------
+  sonarqube:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Disabling shallow clones is recommended for improving the relevancy of reporting
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5.2.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
