@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Annotated, List
 
@@ -111,7 +111,7 @@ async def create_item(
         name=db_item.name,
         price=db_item.price,
         description=db_item.description,
-        created_at=datetime.now(),
+        created_at=datetime.now(timezone.utc),
     )
 
 
