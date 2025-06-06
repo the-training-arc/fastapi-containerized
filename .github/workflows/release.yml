@@ -11,6 +11,8 @@ jobs:
     concurrency: release
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: python-semantic-release/python-semantic-release@v10.0.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
