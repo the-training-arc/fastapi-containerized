@@ -1,0 +1,11 @@
+[project]
+name = "fastapi-workshop"
+version = "0.0.1"
+description = "FastAPI Workshop"
+
+[tool.semantic_release]
+version_toml = ["releaserc.toml"]
+version_variable = [
+    "__init__.py:__version__"
+]
+branch = "main"
