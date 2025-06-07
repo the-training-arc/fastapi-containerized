@@ -19,11 +19,19 @@ jobs:
       contents: write
 
     steps:
+      - name: Setup | Create GitHub App Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.VERSION_BUMPER_APPID }}
+          private-key: ${{ secrets.VERSION_BUMPER_SECRET }}
+
       - name: Setup | Checkout Repository on Release Branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup | Force release branch to be at workflow sha
         run: |
@@ -66,7 +74,7 @@ jobs:
         # Adjust tag with desired version if applicable.
         uses: python-semantic-release/python-semantic-release@v10.0.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.app-token.outputs.token }}
           git_committer_name: "github-actions"
           git_committer_email: "actions@users.noreply.github.com"
 
@@ -74,7 +82,7 @@ jobs:
         uses: python-semantic-release/publish-action@v10.0.2
         if: steps.release.outputs.released == 'true'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.app-token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
 
       - name: Upload | Distribution Artifacts
