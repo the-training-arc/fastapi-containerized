@@ -8,14 +8,14 @@ phases:
   install:
     runtime-versions:
       docker: 20
-      python: 3.12
+    commands:
+      - yum update -y
+      - yum install -y python3.12 python3.12-pip
 
   pre_build:
     commands:
-      # Install semantic-release to get the current version
       - pip install python-semantic-release==10.0.2
 
-      # Get the semantic version using semantic-release itself
       - >
         if SEMANTIC_VERSION=$(semantic-release version --print-last-released 2>/dev/null) && [ -n "$SEMANTIC_VERSION" ]; then
           echo "Found released version: $SEMANTIC_VERSION";
