@@ -16,13 +16,12 @@ phases:
       - pip install python-semantic-release==10.0.2
 
       # Get the semantic version using semantic-release itself
-      - |
+      - >
         if SEMANTIC_VERSION=$(semantic-release version --print-last-released 2>/dev/null) && [ -n "$SEMANTIC_VERSION" ]; then
-          echo "Found released version: $SEMANTIC_VERSION"
+          echo "Found released version: $SEMANTIC_VERSION";
         else
-          # Fallback if no releases exist yet
-          SEMANTIC_VERSION="0.0.1"
-          echo "No releases found, using fallback: $SEMANTIC_VERSION"
+          SEMANTIC_VERSION="0.0.1";
+          echo "No releases found, using fallback: $SEMANTIC_VERSION";
         fi
 
       # Login to Amazon ECR
