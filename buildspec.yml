@@ -32,7 +32,6 @@ phases:
       - IMAGE_TAG=${SEMANTIC_VERSION}-${COMMIT_HASH}
       - LATEST_TAG=latest
       - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}
-
       - echo "Final image tag will be: $IMAGE_TAG"
 
   build:
